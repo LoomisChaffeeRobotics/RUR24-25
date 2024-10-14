@@ -25,17 +25,29 @@ public class DoNothingWithCameraOn extends OpMode {
         myAprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
         // Enable or disable the AprilTag processor.
         myVisionPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Webcam 1"), myAprilTagProcessor);
-//        myAprilTagDetection = AprilTagDetection.easy;
+
     }
 
     @Override
     public void loop() {
+        if (myAprilTagDetection.ftcPose != null) {
 
-        double myTagPoseX = myAprilTagDetection.ftcPose.x;
-        double myTagPoseY = myAprilTagDetection.ftcPose.y;
-        double myTagPoseZ = myAprilTagDetection.ftcPose.z;
-        double myTagPosePitch = myAprilTagDetection.ftcPose.pitch;
-        double myTagPoseRoll = myAprilTagDetection.ftcPose.roll;
-        double myTagPoseYaw = myAprilTagDetection.ftcPose.yaw;
+            double myTagPoseX = myAprilTagDetection.ftcPose.x;
+            double myTagPoseY = myAprilTagDetection.ftcPose.y;
+            double myTagPoseZ = myAprilTagDetection.ftcPose.z;
+            double myTagPosePitch = myAprilTagDetection.ftcPose.pitch;
+            double myTagPoseRoll = myAprilTagDetection.ftcPose.roll;
+            double myTagPoseYaw = myAprilTagDetection.ftcPose.yaw;
+
+
+            telemetry.addData("X", myTagPoseX);
+            telemetry.addData("Y", myTagPoseY);
+            telemetry.addData("Z", myTagPoseZ);
+            telemetry.addData("Pitch", myTagPosePitch);
+            telemetry.addData("Roll", myTagPoseRoll);
+            telemetry.addData("Yaw", myTagPoseYaw);
+            telemetry.update();
+        }
+
     }
 }
