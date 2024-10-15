@@ -19,10 +19,11 @@ public class DoNothingWithCameraOn extends OpMode {
     IMU imu;
     AprilTagProcessor myAprilTagProcessor;
     VisionPortal myVisionPortal;
-    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    SampleMecanumDrive drive;
 
     @Override
     public void init() {
+        drive  = new SampleMecanumDrive(hardwareMap);
 
         imu = hardwareMap.get(IMU.class, "imu");
 // Create the AprilTag processor and assign it to a variable.
