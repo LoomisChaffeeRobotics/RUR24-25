@@ -9,6 +9,8 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.List;
+
 
 @TeleOp
 public class DoNothingWithCameraOn extends OpMode {
@@ -16,7 +18,6 @@ public class DoNothingWithCameraOn extends OpMode {
     IMU imu;
     AprilTagProcessor myAprilTagProcessor;
     VisionPortal myVisionPortal;
-    AprilTagDetection myAprilTagDetection;
 
     @Override
     public void init() {
@@ -30,24 +31,26 @@ public class DoNothingWithCameraOn extends OpMode {
 
     @Override
     public void loop() {
-        if (myAprilTagDetection.ftcPose != null) {
+        aprilTagTelemetry();
 
-            double myTagPoseX = myAprilTagDetection.ftcPose.x;
-            double myTagPoseY = myAprilTagDetection.ftcPose.y;
-            double myTagPoseZ = myAprilTagDetection.ftcPose.z;
-            double myTagPosePitch = myAprilTagDetection.ftcPose.pitch;
-            double myTagPoseRoll = myAprilTagDetection.ftcPose.roll;
-            double myTagPoseYaw = myAprilTagDetection.ftcPose.yaw;
+    }
+    private void aprilTagTelemetry() {
+        List<AprilTagDetection> currentDetections = myAprilTagProcessor.getDetections();
+        telemetry.addData("# AprilTags Detected", currentDetections.size());
+
+        // Step through the list of detections and display info for each one.
+        for (AprilTagDetection detection : currentDetections) {
+
+            // targetTag isolated
+
+            telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+            telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+            telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+            telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
 
 
-            telemetry.addData("X", myTagPoseX);
-            telemetry.addData("Y", myTagPoseY);
-            telemetry.addData("Z", myTagPoseZ);
-            telemetry.addData("Pitch", myTagPosePitch);
-            telemetry.addData("Roll", myTagPoseRoll);
-            telemetry.addData("Yaw", myTagPoseYaw);
-            telemetry.update();
         }
+
 
     }
 }
