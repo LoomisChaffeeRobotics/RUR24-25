@@ -24,6 +24,7 @@ public class DoNothingWithCameraOn extends OpMode {
         imu = hardwareMap.get(IMU.class, "imu");
 // Create the AprilTag processor and assign it to a variable.
         myAprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
+        myAprilTagDetection = hardwareMap.get(AprilTagDetection.class, "myAprilTagDetection");
         // Enable or disable the AprilTag processor.
         myVisionPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Webcam 1"), myAprilTagProcessor);
 
