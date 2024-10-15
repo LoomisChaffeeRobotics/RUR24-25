@@ -36,6 +36,7 @@ public class DoNothingWithCameraOn extends OpMode {
     @Override
     public void loop() {
         aprilTagTelemetry();
+        drive.update();
         telemetry.addData("pose",drive.getPoseEstimate());
     }
     private void aprilTagTelemetry() {
