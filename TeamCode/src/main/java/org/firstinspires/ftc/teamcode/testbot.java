@@ -10,9 +10,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class testbot extends OpMode {
 
     Servo Claw;
+    Servo Arm;
     float speedfactor = 0.002F;
     float Clawclose = 0.39F;
     float Clawopen = Clawclose + 0.29F;
+    float Armopen = 0.5F;
+    float Armclose = Armopen;
     DcMotor frontLeft;
     DcMotor frontRight;
     DcMotor rearLeft;
@@ -24,12 +27,18 @@ public class testbot extends OpMode {
     double n = 0;
     double ns = 0;
     int cnt = 1;
+    int acnt = 1;
+
     int rtdepressed = 0;
+    int rbdepressed = 0;
 
 
     @Override
     public void init() {
 
+
+        Arm = hardwareMap.get(Servo.class, "Arm");
+        Arm.setPosition(Armopen);
         Claw = hardwareMap.get(Servo.class, "Claw");
         Claw.setPosition(Clawopen);
 
@@ -51,6 +60,7 @@ public class testbot extends OpMode {
     public void loop() {
         if (gamepad1.back) {
             Claw.setPosition(Clawopen);
+            Arm.setPosition(Armopen);
 
         }
 
@@ -69,16 +79,32 @@ public class testbot extends OpMode {
         }
         if (gamepad1.right_trigger < 0.2) {rtdepressed = 0;}
 
-        if (gamepad1.right_trigger >= 0.2 && gamepad1.left_bumper) {
-            Claw.setPosition(Claw.getPosition() - speedfactor);
-            telemetry.addData("Claw Pos:", (Claw.getPosition()));
+        if (gamepad1.right_bumper && gamepad1.x) {
+            Arm.setPosition(Arm.getPosition() - speedfactor);
+            telemetry.addData("Arm Pos:", (Arm.getPosition()));
         }
         if (gamepad1.right_bumper && gamepad1.left_bumper) {
-            Claw.setPosition(Claw.getPosition() + speedfactor);
-            telemetry.addData("Claw Pos:", (Claw.getPosition()));
+            Arm.setPosition(Arm.getPosition() + speedfactor);
+            telemetry.addData("Arm Pos:", (Arm.getPosition()));
         }
 
+        if ((gamepad1.right_bumper && !gamepad1.left_bumper) && acnt == 2 && rbdepressed == 0) {
+            Arm.setPosition(Armopen);
+            telemetry.addData("Arm Pos:", (Arm.getPosition()));
+            acnt = 1;
+            rbdepressed = 1;
+        }
+        else if ((gamepad1.right_bumper && !gamepad1.left_bumper) && acnt == 1 && rbdepressed == 0) {
+            Arm.setPosition(Armclose);
+            telemetry.addData("Arm Pos:", (Arm.getPosition()));
+            acnt = 2;
+            rbdepressed = 1;
+        }
+        if (gamepad1.right_bumper) {rbdepressed = 0;}
 
+   
+        
+        
         if (gamepad1.left_trigger >= 0.3) {
             y = (0.3) * gamepad1.left_stick_y;
         }
@@ -100,19 +126,7 @@ public class testbot extends OpMode {
             rx = gamepad1.right_stick_x;
         }
 
-
-        if (gamepad1.dpad_right && n == 0)
-            ns = 0.7;
-            tester.setPower(ns);
-            n = 1;
-        if (gamepad1.dpad_left && n == 0)
-            ns = 0.7;
-            tester.setPower(-ns);
-            n = 1;
-        if (!gamepad1.dpad_left && !gamepad1.dpad_right)
-            n = 0;
-            ns = 0;
-            tester.setPower(ns);
+        
 
 
         frontLeft.setPower(y + x + rx);
